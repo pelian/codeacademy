@@ -224,11 +224,12 @@ class TomeRater(object):
         for user in self.users.values():
             print(user)
 
-    def get_user_average_rating(self, email: str) -> str:
+    def get_user_average_rating(self, email: str) -> float: 
         user = self.users.get(email)
         if user:
             return user.average_user_rating
-        return 'No user with email {email}'.format(email=email)
+        print('No user with email {email}'.format(email=email)) # edited as this should probably return float not a str
+        return None 
 
     def get_n_most_read_books(self, n) -> List['Book']:
         if n >= 0 and n <= len(self.books): # edited to check that n is valid
@@ -244,6 +245,8 @@ class TomeRater(object):
             return sorted(self.books.keys(), key=operator.attrgetter('price'), reverse=True)[:n]
         return None
 
-    def get_worth_of_user(self, user_email):
+    def get_worth_of_user(self, user_email) -> float:
         if self.validate_email(user_email): # edited to check e-mail is at least valid
             return self.users[user_email].total_price
+        print('{email} is an invalid email, please try your query again.'.format(email=user_email))
+        return None
