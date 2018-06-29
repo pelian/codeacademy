@@ -197,17 +197,23 @@ class TomeRater(object):
 
     def get_most_read_book(self) -> List['Books']:
         if self.books:
-            return list(k for k, v in self.books.items() if v == max(self.books.values()))            
+            # return list(k for k, v in self.books.items() if v == max(self.books.values()))
+            max_read = max(self.books.values()) # edited to prevent iterating each loop for performance improvement
+            return list(k for k, v in self.books.items() if v == max_read)
         return None
 
     def highest_rated_book(self) -> List['Books']:
         if self.books:
-            return list(k for k in self.books.keys() if k.average_rating == max(k.average_rating for k in self.books.keys()))
+            # return list(k for k in self.books.keys() if k.average_rating == max(k.average_rating for k in self.books.keys()))
+            max_rating = max(k.average_rating for k in self.books.keys()) # edited to prevent iterating each loop for performance improvement
+            return list(k for k in self.books.keys() if k.average_rating == max_rating)
         return None
 
     def most_positive_user(self) -> List['User']:
         if self.users:
-            return list(v for v in self.users.values() if v.rating == max(v.rating for v in self.users.values()))
+            # return list(v for v in self.users.values() if v.rating == max(v.rating for v in self.users.values()))
+            max_user = max(v.rating for v in self.users.values()) # edited to prevent iterating each loop for performance improvement
+            return list(v for v in self.users.values() if v.rating == max_user)
         return None
 
     def print_catalog(self):
@@ -225,13 +231,19 @@ class TomeRater(object):
         return 'No user with email {email}'.format(email=email)
 
     def get_n_most_read_books(self, n) -> List['Book']:
-        return sorted(self.books, key=self.books.get, reverse=True)[:n]
+        if n >= 0 and n <= len(self.books): # edited to check that n is valid
+            return sorted(self.books, key=self.books.get, reverse=True)[:n]
+        return None
 
     def get_n_most_prolific_readers(self, n) -> List['User']:
-        return sorted(self.users.values(), key=operator.attrgetter('count'), reverse=True)[:n]
+        if n >= 0 and n <= len(self.users): # edited to check that n is valid
+            return sorted(self.users.values(), key=operator.attrgetter('count'), reverse=True)[:n]
 
     def get_n_most_expensive_books(self, n) -> List['Book']:
-        return sorted(self.books.keys(), key=operator.attrgetter('price'), reverse=True)[:n]
-    
+        if n >= 0 and n <= len(self.books): # edited to check that n is valid
+            return sorted(self.books.keys(), key=operator.attrgetter('price'), reverse=True)[:n]
+        return None
+
     def get_worth_of_user(self, user_email):
-        return self.users[user_email].total_price
+        if self.validate_email(user_email): # edited to check e-mail is at least valid
+            return self.users[user_email].total_price
