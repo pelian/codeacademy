@@ -4,7 +4,7 @@
 /myproject/static/
 /myproject/tmp/
 /myproject/media/
-/Data Visualization with Python/unit 3/
+**/Data Visualization with Python/unit 3/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -12,7 +12,7 @@ __pycache__/
 *$py.class
 
 # Jupyter notebook checkpoints
-/Data Visualization with Python/.ipynb_checkpoints/
+**/Data Visualization with Python/.ipynb_checkpoints/
 
 # C extensions
 *.so
