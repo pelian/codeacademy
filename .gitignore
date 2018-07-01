@@ -4,15 +4,15 @@
 /myproject/static/
 /myproject/tmp/
 /myproject/media/
-/codeacademy/Data Visualization with Python/unit 3/
+/Data Visualization with Python/unit 3/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 
-# Juypter notebook checkpoints
-/codeacademy/Data Visualization with Python/.ipynb_checkpoints/
+# Jupyter notebook checkpoints
+/Data Visualization with Python/.ipynb_checkpoints/
 
 # C extensions
 *.so
