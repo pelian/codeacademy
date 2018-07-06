@@ -1,2 +1,2 @@
-run.config
+run.config:
   engine: nodejs
