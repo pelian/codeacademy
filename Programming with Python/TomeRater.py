@@ -14,19 +14,17 @@ class User(object):
         self.books = {}
 
     def __repr__(self):
-        return 'user: {name}, email: {email}, books read: {books}, average rating: {rating:.2f}'.format(name=self.name, email=self.email, books=str(len(self.books)), rating=self.rating)
+        return 'user: {}, email: {}, books read: {}, average rating: {:.2f}'.format(self.name, self.email, str(len(self.books)), self.rating)
 
     def __eq__(self, other_user: 'User') -> bool:
-        if self.name == other_user.name and self.email == other_user.email:
-            return True
-        return False
+        return self.name == other_user.name and self.email == other_user.email
 
     def get_email(self):
         return self.email
 
     def change_email(self, address: str):
         self.email = address
-        print('User email was changed to: {email}'.format(email=self.email))
+        print('User email was changed to: {}'.format(self.email))
 
     def get_average_rating(self) -> float:
         ratings = [rating for rating in self.books.values() if rating]
@@ -50,12 +48,10 @@ class Book(object):
         self.ratings = []
 
     def __eq__(self, other_book: 'Book') -> bool:
-        if self.title == other_book.title and self.isbn == other_book.isbn:
-            return True
-        return False
+        return self.title == other_book.title and self.isbn == other_book.isbn
 
     def __repr__(self) -> str:
-        return '{title} with ISBN {isbn} has an average rating of {rating:.2f}'.format(title=self.title, isbn=self.isbn, rating=self.average_rating)
+        return '{} with ISBN {} has an average rating of {:.2f}'.format(self.title, self.isbn, self.average_rating)
 
     def __hash__(self) -> Hashable:
         return hash((self.title, self.isbn))
@@ -71,7 +67,7 @@ class Book(object):
 
     def set_isbn(self, isbn: int):
         self.isbn = isbn
-        print('{book} ISBN is now set to {isbn}'.format(book=self.title, isbn=isbn))
+        print('{} ISBN is now set to {}'.format(self.title, self.isbn))
 
     def set_price(self, price: float) -> float:
         self.price = price
@@ -80,7 +76,7 @@ class Book(object):
         if rating and rating > 0 and rating <=4:
             self.ratings.append(float(rating))
             self.average_rating = self.get_average_rating()
-            print('A rating of {rating:.2f} was added to {book} with a total of {count} ratings and an average rating of {average:.2f}'.format(rating=rating, book=self.title, count=str(len(self.ratings)), average=self.average_rating))
+            print('A rating of {:.2f} was added to {} with a total of {} ratings and an average rating of {:.2f}'.format(rating, self.title, str(len(self.ratings)), self.average_rating))
         else:
             print('Invalid Rating')
     
@@ -98,7 +94,7 @@ class Fiction(Book):
         self.author = author
 
     def __repr__(self) -> str:
-        return '{title} by {author} with ISBN {isbn} has an average rating of {rating:.2f}'.format(title=self.title, author=self.author, isbn=self.isbn, rating=self.average_rating)
+        return '{} by {} with ISBN {} has an average rating of {:.2f}'.format(self.title, self.author, self.isbn, self.average_rating)
 
     def get_author(self) -> str:
         return self.author
@@ -113,7 +109,7 @@ class Non_Fiction(Book):
         self.level = level
     
     def __repr__(self) -> str:
-        return '{title}, a {level} manual on {subject} with ISBN {isbn} has an average rating of {rating:.2f}'.format(title=self.title, level=self.level, subject=self.subject, isbn=self.isbn, rating=self.average_rating)
+        return '{}, a {} manual on {} with ISBN {} has an average rating of {:.2f}'.format(self.title, self.level, self.subject, self.isbn, self.average_rating)
 
     def get_subject(self) -> str:
         return self.subject
@@ -131,12 +127,10 @@ class TomeRater(object):
         self.library = {}
 
     def __repr__(self) -> str:
-        return 'TomeRater has {users} users and {books} books'.format(users=len(self.users), books=len(self.books))
+        return 'TomeRater has {} users and {} books'.format(len(self.users), len(self.books))
     
     def __eq__(self, other_tomerater: 'TomeRater') -> bool:
-        if self.users == other_tomerater.users and self.books == other_tomerater.books:
-            return True
-        return False
+        return self.users == other_tomerater.users and self.books == other_tomerater.books
 
     def add_user(self, name: str, email: str, user_books: Dict['Book', Union[int, float]] = None):
         if not email in self.users and self.validate_email(email):
@@ -149,38 +143,36 @@ class TomeRater(object):
             print('You entered an invalid email {email}!'.format(email=email))
 
     def validate_email(self, email: str) -> bool:
-        if re.match(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", email):
-            return True
-        return False
+        return re.match(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", email)
 
     def create_book(self, title: str, isbn: int, price: float = 0.00) -> 'Book':
         if isbn not in self.library:  
             new_book = Book(title, isbn, price)
             self.library[isbn] = new_book
-            print('Add {title} with ISBN {isbn} to TomeRater'.format(title=title, isbn=isbn))
+            print('Add {} with ISBN {} to TomeRater'.format(title, isbn))
             return new_book
         else:
-            print('{title} not added, a book with ISBN {isbn} already exists!'.format(title=title, isbn=isbn))
+            print('{} not added, a book with ISBN {} already exists!'.format(title, isbn))
             return None
 
     def create_novel(self, title: str, author: str, isbn: int, price: float = 0.00) -> 'Fiction':
         if isbn not in self.library:  
             new_novel = Fiction(title, author, isbn, price)
             self.library[isbn] = new_novel
-            print('Add {title} with ISBN {isbn} to TomeRater'.format(title=title, isbn=isbn))
+            print('Add {} with ISBN {} to TomeRater'.format(title, isbn))
             return new_novel
         else:
-            print('{title} not added, a book with ISBN {isbn} already exists!'.format(title=title, isbn=isbn))
+            print('{} not added, a book with ISBN {} already exists!'.format(title, isbn))
             return None
     
     def create_non_fiction(self, title: str, subject: str, level: str, isbn: int, price: float = 0.00) -> 'Non_Fiction':
         if isbn not in self.library:
             new_non_fiction = Non_Fiction(title, subject, level, isbn, price)
             self.library[isbn] = new_non_fiction
-            print('Add {title} with ISBN {isbn} to TomeRater'.format(title=title, isbn=isbn))
+            print('Add {} with ISBN {} to TomeRater'.format(title, isbn))
             return new_non_fiction
         else:
-            print('{title} not added, a book with ISBN {isbn} already exists!'.format(title=title, isbn=isbn))
+            print('{} not added, a book with ISBN {} already exists!'.format(title, isbn))
             return None
 
     def add_book_to_user(self, book: 'Book', email: str, rating: Union[int, float] = None):
@@ -193,7 +185,7 @@ class TomeRater(object):
                 self.books[book] += 1
                 book.add_rating(rating)
             except ValueError:
-                print('No user with email {email}'.format(email=email))
+                print('No user with email {}'.format(email))
 
     def get_most_read_book(self) -> List['Books']:
         if self.books:
@@ -228,7 +220,7 @@ class TomeRater(object):
         user = self.users.get(email)
         if user:
             return user.average_user_rating
-        print('No user with email {email}'.format(email=email)) # edited as this should probably return float not a str
+        print('No user with email {}'.format(email)) # edited as this should probably return float not a str
         return None 
 
     def get_n_most_read_books(self, n) -> List['Book']:
@@ -248,5 +240,5 @@ class TomeRater(object):
     def get_worth_of_user(self, user_email) -> float:
         if self.validate_email(user_email): # edited to check e-mail is at least valid
             return self.users[user_email].total_price
-        print('{email} is an invalid email, please try your query again.'.format(email=user_email))
+        print('{} is an invalid email, please try your query again.'.format(user_email))
         return None
