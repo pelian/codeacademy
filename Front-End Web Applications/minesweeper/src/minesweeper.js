@@ -23,7 +23,7 @@ const generateBombBoard = (numberOfRows, numberOfColumns, numberOfBombs) => {
     while (numberOfBombsPlaced < numberOfBombs) {
         let randomRowIndex = Math.floor(Math.random() * numberOfRows);
         let randomColumnIndex = Math.floor(Math.random() * numberOfColumns);
-        if (!board[randomRowIndex][randomColumnIndex] === 'B') {
+        if (board[randomRowIndex][randomColumnIndex] !== 'B') {
             board[randomRowIndex][randomColumnIndex] = 'B';
             numberOfBombsPlaced++;
         }
@@ -33,12 +33,13 @@ const generateBombBoard = (numberOfRows, numberOfColumns, numberOfBombs) => {
 
 const getNumberOfNeighborBombs = (bombBoard, rowIndex, columnIndex) => {
     let neighborOffsets = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
+    const numberOfRows = bombBoard.length;
     const numberOfColumns = bombBoard[0].length;
     let numberOfBombs = 0;
     neighborOffsets.forEach(offset => {
         const neighborRowIndex = rowIndex + offset[0];
         const neighborColumnIndex = columnIndex + offset[1];
-        if (neighborRowIndex >= 0 && neighborRowIndex < bombBoard.length && neighborColumnIndex >= 0 && neighborColumnIndex < bombBoard[0].length) {
+        if (neighborRowIndex >= 0 && neighborRowIndex < numberOfRows && neighborColumnIndex >= 0 && neighborColumnIndex < numberOfColumns) {
             if (bombBoard[neighborRowIndex][neighborColumnIndex] === 'B') {
                 numberOfBombs++;
             }
@@ -48,8 +49,9 @@ const getNumberOfNeighborBombs = (bombBoard, rowIndex, columnIndex) => {
 };
 
 const flipTile = (playerBoard, bombBoard, rowIndex, columnIndex) => {
-    if (!playerBoard[rowIndex][columnIndex] === ' ') {
+    if (playerBoard[rowIndex][columnIndex] !== ' ') {
         console.log('This tile has already been flipped!');
+        return;
     } else if (bombBoard[rowIndex][columnIndex] === 'B') {
         playerBoard[rowIndex][columnIndex] = 'B';
     } else {
@@ -66,15 +68,15 @@ let playerBoard = generatePlayerBoard(3, 4);
 let bombBoard = generateBombBoard(3, 4, 5);
 
 // Print the boards
-console.log('Player Board: ');
+console.log('Player Board:');
 printBoard(playerBoard);
 
-console.log('Bomb Board: ');
+console.log('Bomb Board:');
 printBoard(bombBoard);
 
 // Flip a tile
-flipTile(playerBoard, bombBoardm, 0, 0);
+flipTile(playerBoard, bombBoard, 2, 2);
 
 // Print updated board
-console.log('Updated Player Board: ');
+console.log('Updated Player Board:');
 printBoard(playerBoard);
