@@ -1,0 +1,28 @@
+{
+  "name": "minesweeper",
+  "version": "1.0.0",
+  "description": "CodeAcademy Front-End Web Applications minesweeper exercise",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel src -d lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pelian/codeacademy.git"
+  },
+  "keywords": [
+    "minesweeper"
+  ],
+  "author": "Joseph A.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pelian/codeacademy/issues"
+  },
+  "homepage": "https://github.com/pelian/codeacademy#readme"
+}
