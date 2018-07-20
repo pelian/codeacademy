@@ -32,6 +32,6 @@ async function search(term, location, sortBy) {
 };
 
 /* Shorthand
-const search = async (api = 'businesses', term, location, sortBy) => await (await fetch(`https://cors-anywhere.herokuapp.com/${yelpAPI}/${api}/search?term=${term}&location=${location}&sort_by=${sortBy}`)).json()
+const search = async (term, location, sortBy) => await (await fetch(`https://cors-anywhere.herokuapp.com/${yelpAPI}/businesses/search?term=${term}&location=${location}&sort_by=${sortBy}`)).json()
 */
 export default search;
