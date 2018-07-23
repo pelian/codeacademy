@@ -2,7 +2,6 @@ import React from 'react'
 import './SearchBar.css'
 
 const types = ['album', 'artist', 'playlist', 'track']
-
 export default class SearchBar extends React.Component {
     constructor(props) {
         super(props);

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import '../SearchBar/SearchBar';
-import '../SearchResults/SearchResults';
-import '../Playlist/Playlist';
+import { SearchBar } from '../SearchBar/SearchBar';
+import { SearchResults } from '../SearchResults/SearchResults';
+import { Playlist } from '../Playlist/Playlist';
+import { Spotify } from '../../util/Spotify';
 import './App.css';
-import Spotify from '../../util/Spotify';
+
 
 // Constants
 const CLIENT_ID = '76e6440834da4c86a58579c4af9eed25';
@@ -79,4 +80,4 @@ class App extends Component {
   }
 }
  
-export default App;
+export default App; 
