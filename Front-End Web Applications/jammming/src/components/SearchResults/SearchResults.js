@@ -9,7 +9,7 @@ export class SearchResults extends Base {
       <Grid.Column width={6} className='search-results'>
         <Grid.Row className='search-results-term'>
           <Header as='h2'>
-            I <Icon name='heart' color='purple' /> {this.props.searchTerm ? this.props.searchTerm : 'Jammming'}
+            I <Icon name='heart' color='pink' /> {this.props.searchTerm ? this.props.searchTerm : 'Jammming'}
           </Header>
         </Grid.Row>
         <Grid.Row className='search-results-tracks'>

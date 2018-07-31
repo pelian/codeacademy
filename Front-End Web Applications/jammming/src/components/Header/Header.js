@@ -18,7 +18,7 @@ export class Header extends Component {
 
   loginButton = (
     this.props.isAuthorized ?
-      <Menu.Item className='header-logout' name='logout' active={this.state.activeItem === 'logout'} onClick={this.handleLogOut} color='#6d589d'>
+      <Menu.Item className='header-logout' name='logout' active={this.state.activeItem === 'logout'} onClick={this.handleLogOut} color='purple'>
         <Button icon labelPosition='left' color='purple'>
           <Icon name='spotify' />
           Logout

@@ -1,5 +1,5 @@
 div.search-results {
-    background-color: rgb(255, 255, 255, 0.3);
+    background-color: rgb(255, 255, 255, 0.2);
 }
 
 h2.ui.header { 
@@ -20,7 +20,7 @@ h2.ui.header {
     height: 80px;
 }
 
-i.purple.heart.icon {
+i.heart.icon {
     margin-left: 10px;
     margin-right: 10px;
 }

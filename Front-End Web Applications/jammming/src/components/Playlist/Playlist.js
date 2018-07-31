@@ -16,7 +16,7 @@ export class Playlist extends Base {
 
   render() {
     return (
-      <Grid.Column width={5} className='playlist'>
+      <Grid.Column width={6} className='playlist'>
         <Grid.Row className='playlist-save'>
           <Input
             type='text' 
@@ -29,17 +29,19 @@ export class Playlist extends Base {
             action>
             <input />
             <Icon name='heart' />
-            <Button type='submit' className='playlist-submit' onClick={this.props.onSave} color='purple'>
+            <Button type='submit' className='playlist-submit' onClick={this.props.onSave} color='pink'>
               SAVE PLAYLIST
             </Button>
           </Input>
         </Grid.Row>
-        <TrackList 
-          tracks={this.props.playlistTracks} 
-          onAdd={this.props.onAdd}
-          onRemove={this.props.onRemove}
-          isRemovable={true}
-        />
+        <Grid.Row className='playlist-tracks'>
+          <TrackList 
+            tracks={this.props.playlistTracks} 
+            onAdd={this.props.onAdd}
+            onRemove={this.props.onRemove}
+            isRemovable={true}
+          />
+        </Grid.Row>
       </Grid.Column>
     );
   }

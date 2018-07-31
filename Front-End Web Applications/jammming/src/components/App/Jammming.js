@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Segment } from 'semantic-ui-react';
+import { Grid, Container, Loader } from 'semantic-ui-react';
 import { Base } from '../Base/Base';
 import { Header } from '../Header/Header';
 import { SearchBar } from '../SearchBar/SearchBar';
@@ -101,10 +101,9 @@ class Jammming extends Base {
     let body;
     if (this.state.isAuthorized) {
       body = (
-        <Segment>
           <Grid stackable>
             <SearchBar onSearch={this.handleSearch} />
-            <Grid.Row columns={2} className='jammming-body'>
+            <Grid.Row columns='equal' className='jammming-body'>
               <Grid.Column width={1} />
               <SearchResults 
                 searchTerm={this.state.searchResults.term}
@@ -123,20 +122,39 @@ class Jammming extends Base {
               <Grid.Column width={1} />
             </Grid.Row>
           </Grid>
-        </Segment>
       );
     } else if (this.state.isProcessingLogin) {
       this.getNewAccessToken();
-      body = <p className='jammming-loading'>Jammming is loading... Please wait</p>;
+      body = (
+          <Grid>
+            <Grid.Row columns='equal'>
+              <Grid.Column />
+              <Grid.Column width={6}>
+                <h2 className='jammming-loading' style={{color:'white'}}><Loader active inline />  Jammming is loading... Please wait</h2>
+              </Grid.Column>
+              <Grid.Column />
+            </Grid.Row>
+          </Grid>
+      );
     } else {
-      body = <div className='jammming-blank'>Please Login to start Jammming!</div>
+      body = (
+          <Grid>
+            <Grid.Row columns='equal'>
+              <Grid.Column />
+              <Grid.Column width={6}>
+                <h2 className='jammming-blank' style={{color:'white'}}>Please Login to start Jammming!</h2>
+              </Grid.Column>
+              <Grid.Column />
+            </Grid.Row>
+          </Grid>
+      );
     }
     
     return (
-      <main className='jammming'>
+      <Container className='jammming'>
         <Header isAuthorized={this.state.isAuthorized}/>
         {body}
-      </main>
+      </Container>
     );
   }
 }

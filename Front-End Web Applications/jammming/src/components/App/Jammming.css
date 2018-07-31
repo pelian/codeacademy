@@ -1,9 +1,11 @@
-main.jammming, div#root {
-    height: 100% !important;
-    background-image: url('./kaleb-nimz-904-unsplash-bg.jpg') !important;
-    font-family: Questrial !important;
+body,
+html,
+#root {
+  height: 100%;
+  background-image: url('./aaron-paul-213841-unsplash-bg.jpg') !important;
+  font-family: Questrial !important;
 }
 
 div.ui.segment {
-    background-color: transparent !important;
+  background-color: transparent !important;
 }

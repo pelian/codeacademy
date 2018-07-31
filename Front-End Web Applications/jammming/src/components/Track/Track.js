@@ -14,9 +14,9 @@ export class Track extends Base {
 
   renderAction() {
     if (this.props.isRemovable) {
-      return <Icon link name='minus circle' size='big' color='orange' className='track-action' onClick={this.removeTrack} />;
+      return <Icon link name='minus circle' size='big' color='pink' className='track-action' onClick={this.removeTrack} />;
     } else {
-      return <Icon link name='plus circle' size='big' color='orange' className='track-action' onClick={this.addTrack} />;
+      return <Icon link name='plus circle' size='big' color='pink' className='track-action' onClick={this.addTrack} />;
     }
   }
   
@@ -77,10 +77,10 @@ export class Track extends Base {
           {this.renderTrack()}
         </Item.Image>
         <Item.Content className='track-information'>
-          <Item.Header className='track-title'>{track.title}</Item.Header>
+          <Item.Header className='track-title' style={{color: 'white'}}>{track.title}</Item.Header>
           <Item.Description className='track-description'>
-            <p className='track-artist'>{track.artist}</p>
-            <p className='track-album'>{track.album}</p>
+            <p className='track-artist' style={{color: 'white'}}>{track.artist}</p>
+            <p className='track-album' style={{color: 'white'}}>{track.album}</p>
           </Item.Description>
         </Item.Content>
         <Item.Content className='track-action'>
