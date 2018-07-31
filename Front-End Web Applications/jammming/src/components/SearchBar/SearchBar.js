@@ -43,7 +43,7 @@ export class SearchBar extends Base {
               SEARCH
             </Button>
           </Input>
-        </Grid.Column>
+        </Grid.Column>          
         <Grid.Column />
       </Grid.Row>
     )

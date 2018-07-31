@@ -151,10 +151,10 @@ class Jammming extends Base {
     }
     
     return (
-      <Container className='jammming'>
+      <div className='jammming'>
         <Header isAuthorized={this.state.isAuthorized}/>
         {body}
-      </Container>
+      </div>
     );
   }
 }

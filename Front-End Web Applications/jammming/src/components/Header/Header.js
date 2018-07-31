@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Menu, Button, Icon } from 'semantic-ui-react';
+import { Menu, Button, Icon, Popup } from 'semantic-ui-react';
 import { Spotify } from '../../util/Spotify';
 import './Header.css';
 
@@ -48,6 +48,12 @@ export class Header extends Component {
           onClick={this.handleItemClick}
         />
         <Menu.Menu position='right'>
+          <Popup
+            trigger={<Menu.Item><Icon name='copyright outline' size='large' color='white' /></Menu.Item>}
+            header='Photo by Aaron Paul @ Unsplash'
+            content='Unsplash: @aaronpaulos, Instagram: @aaronpaulos'
+            on={['hover', 'click']}
+          />
           {this.loginButton}
         </Menu.Menu>
       </Menu>
