@@ -1,25 +1,27 @@
-import React from 'react';
-import Track from '../Track/Track';
+import React, { Component } from 'react';
+import { Item } from 'semantic-ui-react'
+import { Track } from '../Track/Track';
 import './TrackList.css';
-class TrackList extends React.Component {
+export class TrackList extends Component {  
   render() {
     return (
-      <div className='TrackList'>
+      <Item.Group className="tracklist" divided>
         {
           this.props.tracks.map(track => {
             return (
-              <Track
-                track={track}
-                key={track.id}
-                onAdd={this.props.onAdd}
-                onRemove={this.props.onRemove}
-                isRemoval={this.props.isRemoval} />
-            );
+              <Track 
+                key={track.id} 
+                track={track} 
+                onAdd={this.props.onAdd} 
+                onRemove={this.props.onRemove} 
+                isRemovable={this.props.isRemovable} 
+              />
+            )
           })
-        }
-      </div>
+        }  
+      </Item.Group>
     );
   }
-};
+}
 
 export default TrackList;

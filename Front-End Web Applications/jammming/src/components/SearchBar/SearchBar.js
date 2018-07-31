@@ -1,37 +1,53 @@
 import React from 'react';
+import { Grid, Input, Icon, Button } from 'semantic-ui-react';
+import { Base } from '../Base/Base';
 import './SearchBar.css';
-export default class SearchBar extends React.Component {
+export class SearchBar extends Base {
   constructor(props) {
     super(props);
-    
-    this.handleSearch = this.handleSearch.bind(this);
-    this.handleTermChange = this.handleTermChange.bind(this);
-    //this.handleSubmit = this.handleSubmit.bind(this);
-    this.onKeyPress = this.onKeyPress.bind(this);
+    this.state = {
+      term: ''
+    }
+
+    this._bind('handleSubmit', 'handleTermChange');
   }
 
-  handleSearch() {
-    this.props.onSearch(this.state.term)
+  handleSubmit() {
+    this.props.onSearch(this.state.term);
   }
 
-  handleTermChange(event) {
-    this.setState({ term: event.target.value });
-  }
-
-  onKeyPress(event) {
-    if (event.key === "Enter") {
-      this.props.onSearch(this.state.term)
+  handleTermChange(e) {
+    if (e.target.value && e.target.value.length >= 1) {
+      this.setState({term: e.target.value});
     }
   }
 
   render() {
     return (
-      <div className="SearchBar">
-        <input placeholder="Enter A Song, Album, or Artist"
-          onChange={this.handleTermChange}
-          onKeyPress={this.onKeyPress} />
-        <a onClick={this.handleSearch}>SEARCH</a>
-      </div>
+      <Grid.Row className='jammming-searchbar' columns='equal'>
+        <Grid.Column />
+        <Grid.Column width={6}>
+          <Input 
+            fluid 
+            type='text' 
+            icon 
+            iconPosition='left' 
+            placeholder='Search Jammming...' 
+            className='search-bar-input' 
+            onChange={this.handleTermChange} 
+            onKeyPress={(e) => e.key === 'Enter' && e.target.value.length >= 1 ? this.handleSubmit(e.target.value) : e.key} 
+            action>
+            <input />
+            <Icon name='search' />
+            <Button type='submit' className='search-bar-submit' onClick={(e) => this.state.term && this.state.term.length >= 1 ? this.handleSubmit(e.target.value) : null} color='purple'>
+              SEARCH
+            </Button>
+          </Input>
+        </Grid.Column>
+        <Grid.Column />
+      </Grid.Row>
     )
   }
 }
+
+export default SearchBar;

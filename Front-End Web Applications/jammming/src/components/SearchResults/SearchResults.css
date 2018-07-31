@@ -1,20 +1,26 @@
-.SearchResults {
-  width: 50%;
-  height: 950px;
-  overflow-y: scroll;
-  padding: .88rem;
-  background-color: rgba(1, 12, 63, 0.7);
-  box-shadow: 0 4px 2px 2px #000000;
+div.search-results {
+    background-color: rgb(255, 255, 255, 0.3);
 }
 
-::-webkit-scrollbar {
-    width: 0px;
-    background: transparent;
+h2.ui.header { 
+    background-color: transparent;
+    display: flex;
+    flex-direction: row;
+    align-items: left;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: rgb(255, 255, 255);
 }
 
-@media only screen and (max-width: 1020px) {
-  .SearchResults {
-    width: 90%;
-    margin-bottom: 2rem;
-  }
+.search-results-term {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+}
+
+i.purple.heart.icon {
+    margin-left: 10px;
+    margin-right: 10px;
 }

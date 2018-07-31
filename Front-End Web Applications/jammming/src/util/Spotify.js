@@ -1,24 +1,27 @@
 // Private
 const _clientId = '76e6440834da4c86a58579c4af9eed25';
 const _clientSecret = '511618b520a64069a14f58af28fc946f';
-const _scope = ['playlist-read-private', 'playlist-read-collaborative', 'playlist-modify-public', 'playlist-modify-private'];
+const _scope = ['playlist-modify-public'];
 const _stateKey = 'spotify_auth_state';
 const _accessKey = 'spotify_access_token';
+const _refreshKey = 'spotify_refresh_token';
 let _stateToken = sessionStorage.getItem(_stateKey) ? sessionStorage.getItem(_stateKey) : null; 
-let _accessToken = sessionStorage.getItem(_accessKey) ? sessionStorage.getItem(_accessKey) : null; 
+let _accessToken = sessionStorage.getItem(_accessKey) ? sessionStorage.getItem(_accessKey) : null;
+let _refreshToken = sessionStorage.getItem(_refreshKey) ? sessionStorage.getItem(_refreshKey) : null; 
 
 
 // Constant
 const CORS_URI = 'https://cors-anywhere.herokuapp.com/';
-const REDIRECT_URI = 'https://pelian-jammming.surge.sh';
+const REDIRECT_URI = 'http://localhost:3000' // 'https://pelian-jammming.surge.sh';
 const SEARCH_URI = 'https://api.spotify.com/v1/search?';
+const USER_URI = 'https://api.spotify.com/v1/me';
 const AUTHORIZE_URI = 'https://accounts.spotify.com/authorize?';
 const TOKEN_URI = 'https://accounts.spotify.com/api/token';
 const POSSIBLE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; // Possible characters definition for state token generation
 
 function parseURLParameter(param) {
   if (param) {
-    param = param.replace(/[\[]/, '\\[').replace(/[\]]/, '\]');
+    param = param.replace(/[[]/, '[').replace(/[\]]/, ']');
     var regex = new RegExp('[\\?&]' + param + '=([^&#]*)');
     var response = regex.exec(window.location.search);
     return response === null ? '' : decodeURIComponent(response[1].replace(/\+/g, ' '));  
@@ -38,7 +41,7 @@ function parseURLParameter(param) {
   }
 }
 
-function getUrlParameter(param) {
+function getUrlParameter(param, hash=false) {
   let response = '';
   let params = new URLSearchParams(window.location.search);
   if (params) {
@@ -79,12 +82,12 @@ function generateRandomString(length = 16) {
 /**
  * Calls generateRandomString() to generate a state token and store it to sessionStorage
  */
-function generateStateToken() {
-  sessionStorage.setItem(_stateKey, generateRandomString());
-  return (sessionStorage.getItem(_stateKey));
+async function generateStateToken() {
+  const response = await sessionStorage.setItem(_stateKey, generateRandomString());
+  return response ? sessionStorage.getItem(_stateKey) : null;
 }
 
-const Spotify = {
+export const Spotify = {
   
   setAccessToken(token) {
     _accessToken = token;
@@ -116,6 +119,21 @@ const Spotify = {
     return false;
   },
 
+  setRefreshToken(token) {
+    _refreshToken = token;
+    sessionStorage.setItem(_refreshKey, _refreshToken);
+  },
+
+  getRefreshToken() {
+    return _refreshToken;
+  },  
+
+  hasRefreshToken() {
+    let token = this.getRefreshToken();
+    if (token) return true;
+    return false;
+  },
+
   getAuthCode() {
     return getUrlParameter('code');
   },
@@ -131,7 +149,7 @@ const Spotify = {
   async requestAccessToken() {
     const response = await fetch(`${CORS_URI}${TOKEN_URI}`, {
       method: 'POST',
-      body: `grant_type=authorization_code&code=${this.getAuthCode()}&redirect_uri=${REDIRECT_URI}`,
+      body: `grant_type=authorization_code&code=${this.hasRefreshToken() ? this.getRefreshToken() : this.getAuthCode()}&redirect_uri=${REDIRECT_URI}`,
       headers: {
         // Authorization: Basic *<base64 encoded client_id:client_secret>*
         'Authorization': 'Basic '+ btoa(_clientId + ':' + _clientSecret),
@@ -139,7 +157,15 @@ const Spotify = {
       }
     });
     if (response.ok) {
-      return await response.json();
+      const data = await response.json();
+      if (data) {
+        const refresh = await this.setRefreshToken(data.refresh_token);
+        if (refresh) {
+          window.setTimeout(() => this.requestAccessToken(),  data.expires_in * 1000);
+          window.history.pushState('Access Token', null, '/');
+        }
+      }
+      return data;
     }
   },
 
@@ -153,7 +179,7 @@ const Spotify = {
       if (response.ok) {
         const data = await response.json();
         let tracks = (data.tracks && data.tracks.items.length > 0 ? data.tracks.items : []);
-        return tracks.map(function(track) {
+        return tracks.map(track => {
           let albumCover;
           for(var i = 0; i < track.album.images.length; i++) {
             let image = track.album.images[i];
@@ -178,7 +204,50 @@ const Spotify = {
         resolve({});
       });
     }
-  }
-};
+  },
 
-export default Spotify;
+  async savePlaylist(playlistName, playlistTracks) {
+    if (!playlistName || !playlistTracks || playlistTracks.length === 0) return;
+    const headers = {
+      Authorization: `Bearer ${_accessToken}`
+    };
+    let userId, playlistId;
+    const user = await fetch(`${USER_URI}`, {
+      headers: headers
+    })
+    if (user.ok) {
+      const jsonUser = await user.json();
+      if (!jsonUser) {
+        console.log('Error retrieving' + jsonUser)
+      }
+      userId = jsonUser.id;
+    }
+    if (userId) {
+      const createPlaylistUrl = `https://api.spotify.com/v1/users/${userId}/playlists`;
+      const playlist = await fetch(createPlaylistUrl, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({
+          name: playlistName
+        })
+      })
+      if (playlist.ok) {
+        const jsonPlaylist = await playlist.json();
+        if (!jsonPlaylist) {
+          console.log('Error retrieving' + jsonPlaylist)
+        }
+        playlistId = jsonPlaylist.id;
+      }
+      if (playlistId) {
+        const addPlaylistUrl = `https://api.spotify.com/v1/users/${userId}/playlists/${playlistId}/tracks`;
+        return await fetch(addPlaylistUrl, {
+          method: 'POST',
+          headers: headers,
+          body: JSON.stringify({
+            uris: playlistTracks
+          })
+        });
+      }
+    }
+  }  
+}

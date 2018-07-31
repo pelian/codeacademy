@@ -1,60 +1,65 @@
 import React from 'react';
-import Header from '../Header/Header'
-import SearchBar from '../SearchBar/SearchBar';
-import SearchResults from '../SearchResults/SearchResults';
-import Playlist from '../Playlist/Playlist';
-import Login from '../Login/Login'
-import Spotify from '../../util/Spotify';
+import { Grid, Segment } from 'semantic-ui-react';
+import { Base } from '../Base/Base';
+import { Header } from '../Header/Header';
+import { SearchBar } from '../SearchBar/SearchBar';
+import { SearchResults } from '../SearchResults/SearchResults';
+import { Playlist } from '../Playlist/Playlist';
+import { Spotify } from '../../util/Spotify';
 import './Jammming.css';
 
-class Jammming extends React.Component {
+class Jammming extends Base {
   
   constructor(props) {
     super(props);
     this.state = {
       isAuthorized: Spotify.hasAccessToken(),
-      isLogin: Spotify.getAuthCode(),
+      isProcessingLogin: Spotify.getAuthCode(),
+      playlistName: 'New Playlist',
+      playlistTracks: [],
       searchResults: {
         loading: false,
-        term: "",
-        results: []
-      },
-      playListName: 'New Playlist',
-      playListTracks: []
+        term: '',
+        tracks: []
+      }
     };
 
-    this.addTrack = this.addTrack.bind(this);
-    this.removeTrack = this.removeTrack.bind(this);
-    this.updatePlaylistName = this.updatePlaylistName.bind(this);
-    this.savePlaylist = this.savePlaylist.bind(this);
-    this.handleSearch = this.handleSearch.bind(this);
-    this.handleLogOut = this.handleLogOut.bind(this);
-    this.getNewAccessToken = this.getNewAccessToken.bind(this);
+    this._bind('addTrack', 'removeTrack', 'updatePlaylistName', 'savePlaylist', 'handleSearch', 'getNewAccessToken');
   }
 
   addTrack(track) {
-    if (this.state.playlistTracks.filter(playlistTrack => track.id !== playlistTrack.id)) {
-    let tracks = this.state.playlistTracks;
-    tracks.push(track)
-    this.setState({playlistTracks: tracks})
-   }
+    if (!this.state.playlistTracks.find(playlistTrack => playlistTrack.id === track.id)) {
+      this.setState({
+        playlistTracks: [...this.state.playlistTracks, track]
+      });
+    }
   }
-   
+
   removeTrack(track) {
-    let tracks = this.state.playlistTracks;
-    const removeTrack = tracks.filter(playlistTrack => track.id !== playlistTrack.id);
-    this.setState({playlistTracks: removeTrack});
-  }
+    this.setState({
+      playlistTracks: this.state.playlistTracks.filter(playlistTrack => playlistTrack.id !== track.id)
+    });
+  } 
 
   updatePlaylistName(newPlaylistName) {
     this.setState({playlistName: newPlaylistName})
   }
 
-  savePlaylist() {
-    const trackURIs = this.state.playlistTracks.map(track => track.uri);
-    Spotify.savePlaylist(this.state.playlistName, trackURIs).then(() => {
-      this.setState({playListName: this.playlistName, playListTracks: []});
-    });
+  async savePlaylist() {
+    if (!this.state.playlistName) {
+      console.log('playlist has no name!')
+      return // todo: possibly add a function to request a playlist name before rejecting!
+    }
+    const trackLinks = await this.state.playlistTracks.map(playlistTrack => 'spotify:track:' + playlistTrack.id);
+    const response = await Spotify.savePlaylist(this.state.playlistName, trackLinks);
+    if (response) {
+      this.setState({searchResults: {
+        loading: false, 
+        term: '',
+        tracks: []
+      }, playlistName: this.playlistName, playlistTracks: []});
+    }
+    this.updatePlaylistName('New Playlist');
   }
 
   async handleSearch(term) {
@@ -62,30 +67,28 @@ class Jammming extends React.Component {
       searchResults: {
         loading: true,
         term: term,
-        results: []
+        tracks: []
       }
     });
-    const tracks = await Spotify.search(term);
-    if (tracks) {
+    const response = await Spotify.search(term);
+    if (response) {
       this.setState({
         searchResults: {
-          loading: true,
+          loading: false,
           term: term,
-          results: tracks
+          tracks: response
         }
       });
     }
   }
 
-  handleLogOut() {
-    Spotify.setAccessToken(null);
-    // Set https://accounts.spotify.com/authorize query parameter show_dialog to true to force permissions dialog
-    window.location.href = '/';
-  }
-
   getNewAccessToken() {
     Spotify.requestAccessToken().then(tokenResponse => {
       if(tokenResponse.access_token) {
+        console.log(Spotify.getAccessToken());
+        console.log(Spotify.getRefreshToken());
+        console.log(Spotify.getStateToken());
+        console.log(tokenResponse.expires_in);
         Spotify.setAccessToken(tokenResponse.access_token);
         window.location.href = '/';
       } else {
@@ -95,37 +98,45 @@ class Jammming extends React.Component {
   }
 
   render() {
-    let view;
+    let body;
     if (this.state.isAuthorized) {
-      view = (
-        <div className='Jamming__container'>
-          <SearchBar onSearch={this.handleSearch} />
-          <div className='Jammming__playlist'>
-            <SearchResults 
-              term={this.state.searchResults.term}
-              searchResults={this.state.searchResults} 
-              onAdd={this.addTrack} />
-            <Playlist 
-              playlistName={this.state.playlistName}
-              playlistTracks={this.state.playlistTracks}
-              onRemove={this.removeTrack}
-              onNameChange={this.updatePlaylistName}
-              onSave={this.savePlaylist} />
-          </div>
-        </div>
+      body = (
+        <Segment>
+          <Grid stackable>
+            <SearchBar onSearch={this.handleSearch} />
+            <Grid.Row columns={2} className='jammming-body'>
+              <Grid.Column width={1} />
+              <SearchResults 
+                searchTerm={this.state.searchResults.term}
+                searchResults={this.state.searchResults.tracks} 
+                onAdd={this.addTrack}
+                onRemove={this.removeTrack}
+              />
+              <Grid.Column width={2} />
+              <Playlist 
+                playlistName={this.state.playlistName}
+                playlistTracks={this.state.playlistTracks}
+                onNameChange={this.updatePlaylistName} 
+                onRemove={this.removeTrack}
+                onSave={this.savePlaylist}
+              />
+              <Grid.Column width={1} />
+            </Grid.Row>
+          </Grid>
+        </Segment>
       );
-    } else if (this.state.isLogin) {
+    } else if (this.state.isProcessingLogin) {
       this.getNewAccessToken();
-      view = <p className='Jammming__loading'>Logging you into Spotify... Please wait</p>;
+      body = <p className='jammming-loading'>Jammming is loading... Please wait</p>;
     } else {
-      view = <Login authorizeUserUrl={Spotify.getAuthorizeUserUrl()} />
+      body = <div className='jammming-blank'>Please Login to start Jammming!</div>
     }
     
     return (
-      <div className='Jammming'>
-        <Header isAuthorized={this.state.isAuthorized} handleLogOut={this.handleLogOut} />
-        {view}
-      </div>
+      <main className='jammming'>
+        <Header isAuthorized={this.state.isAuthorized}/>
+        {body}
+      </main>
     );
   }
 }

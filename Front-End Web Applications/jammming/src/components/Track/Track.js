@@ -1,18 +1,25 @@
 import React from 'react';
+import { Base } from '../Base/Base';
+import AudioPlayer from 'react-modular-audio-player';
+import { Image, Item, Icon } from 'semantic-ui-react'
 import './Track.css';
-class Track extends React.Component {
+export class Track extends Base {
   constructor(props) {
     super(props);
-
-    this.handlePreviewClick = this.handlePreviewClick.bind(this);
-    this.addTrack = this.addTrack.bind(this);
-    this.removeTrack = this.removeTrack.bind(this);
-  }   
-
-  renderAction () {
-    return this.props.isRemoval ? <a onClick={ this.removeTrack } className='Track__action'>-</a> : <a onClick={ this.addTrack } className='Track__action'>+</a>
+    this.state = {
+      audioFile: ''
+    }
+    this._bind('renderAction', 'addTrack', 'removeTrack', 'renderTrack');
   }
 
+  renderAction() {
+    if (this.props.isRemovable) {
+      return <Icon link name='minus circle' size='big' color='orange' className='track-action' onClick={this.removeTrack} />;
+    } else {
+      return <Icon link name='plus circle' size='big' color='orange' className='track-action' onClick={this.addTrack} />;
+    }
+  }
+  
   addTrack() {
     this.props.onAdd(this.props.track);
   }
@@ -21,18 +28,67 @@ class Track extends React.Component {
     this.props.onRemove(this.props.track);
   }
 
-  render() {
-    let track = this.props.info;
+  renderTrack() {
+    let track = this.props.track;
+    let rearrangedPlayer = [
+      {
+        className: track.id,
+        style: { 
+          cursor: 'pointer',
+          backgroundImage: track.cover ? 'url(' + track.cover + ')' : 'url(./images/generic_album_cover.jpg)',
+          backgroundSize: 'cover'
+        },
+        innerComponents: [
+          {
+            type: 'play',
+            style: {
+              width: '100%',
+              justifyContent: 'center',
+              filter: 'invert(100%)',
+              opacity: '0.4'
+            }
+          }
+        ]
+      }
+    ];
+
     return (
-      <div className='Track'>
-        <img className='Track__albumCover' src={track.albumImage ? track.albumImage : '../../public/images/genericAlbumCover.jpg'} alt={track.album} />
-        {track.preview_url ? <span className='Track__playPreviewOverlay' onClick={this.handlePreviewClick}><i className='fa fa-play-circle'></i></span> : ''}
-        <div className='Track__information'>
-          <h3 className='Track__title'>{this.props.track.name}</h3>
-          <h4 className='Track__artistAlbum'>{track.artist}} | {track.album}</h4>
-        </div>
-        {this.renderAction()}
-      </div>
+      track.preview_url ? 
+      <AudioPlayer 
+        audioFiles={[
+          {
+            src: track.preview_url,
+            title: track.title,
+            artist: track.artist
+          } 
+        ]}
+        rearrange={rearrangedPlayer}
+        playerWidth='auto'
+        iconSize='auto'
+      /> : <Image src={track.cover ? track.cover : './images/generic_album_cover.jpg'} size='tiny' />
+    )
+  }
+    
+  render() {
+    let track = this.props.track;
+    return (
+      <Item className='track'>
+        <Item.Image size='tiny'>
+          {this.renderTrack()}
+        </Item.Image>
+        <Item.Content className='track-information'>
+          <Item.Header className='track-title'>{track.title}</Item.Header>
+          <Item.Description className='track-description'>
+            <p className='track-artist'>{track.artist}</p>
+            <p className='track-album'>{track.album}</p>
+          </Item.Description>
+        </Item.Content>
+        <Item.Content className='track-action'>
+          <Item.Extra>
+            {this.renderAction()}
+          </Item.Extra>
+        </Item.Content>
+      </Item>
     )
   }
 }

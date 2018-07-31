@@ -1,70 +1,19 @@
-.Header {
-    position:relative;
-    width:100%;
-    padding:10px 0;
-    background-color:#0C7C59;
-    text-align:center;
-    box-shadow:0 2px 15px -5px rgba(0,0,0,0.5);
-    overflow:hidden
+@import url('https://fonts.googleapis.com/css?family=Questrial|Codystar&effect=anaglyph');
+
+.header {
+  width:100%;
+  background-color: rgba(255, 255, 255, 1);
+  overflow:hidden;
+  padding:15px 0;
 }
 
-.logo {
-    position:relative;
-    display:inline-block;
-    padding:0;
-    margin:0;
-    font-family:'Kanit',sans-serif;
-    font-weight:700;
-    font-style:italic;
-    color:#2B303A;
-    font-size:28px;
-    line-height:1
+div.header.menu {
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
-.logo::selection,.logo::-moz-selection {
-    background:#0C7C59
-}
-
-.logo__highlight {
-    color:#D64933;
-    -webkit-animation:changeColor 5s linear infinite normal;
-    -moz-animation:changeColor 5s linear infinite normal;
-    animation:changeColor 5s linear infinite normal
-}
-
-.logo__logOut {
-    position:absolute;
-    right:-85px;
-    top:50%;
-    margin:0;
-    margin-top:-8px;
-    line-height:1;
-    font-size:16px;
-    color:#BAC1B8
-}
-
-.logo__logOut:hover {
-    cursor:pointer;
-    color:#cfd4ce
-}
-
-@-moz-keyframes changeColor {
-    0%{color:#D64933}
-    33%{color:#58A4B0}
-    67%{color:#10a174}
-    100%{color:#D64933}
-}
-
-@-webkit-keyframes changeColor {
-    0%{color:#D64933}
-    33%{color:#58A4B0}
-    67%{color:#10a174}
-    100%{color:#D64933}
-}
-
-@keyframes changeColor {
-    0%{color:#D64933}
-    33%{color:#58A4B0}
-    67%{color:#10a174}
-    100%{color:#D64933}
+span.logo {
+  font-family: 'Codystar';
+  font-size: 1.8em;
+  letter-spacing: 0.1em;
 }
