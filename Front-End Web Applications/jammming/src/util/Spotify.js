@@ -12,7 +12,7 @@ let _refreshToken = sessionStorage.getItem(_refreshKey) ? sessionStorage.getItem
 
 // Constant
 const CORS_URI = 'https://cors-anywhere.herokuapp.com/';
-const REDIRECT_URI = 'http://localhost:3000' // 'https://pelian-jammming.surge.sh';
+const REDIRECT_URI = 'https://pelian-jammming.surge.sh';
 const SEARCH_URI = 'https://api.spotify.com/v1/search?';
 const USER_URI = 'https://api.spotify.com/v1/me';
 const AUTHORIZE_URI = 'https://accounts.spotify.com/authorize?';
