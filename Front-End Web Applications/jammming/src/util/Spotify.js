@@ -199,7 +199,7 @@ export const Spotify = {
         });
       }   
     } else {
-      // No valid search terms
+      // No valid search  
       return new Promise(resolve => {
         resolve({});
       });
