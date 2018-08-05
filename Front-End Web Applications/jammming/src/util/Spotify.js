@@ -41,7 +41,7 @@ function parseURLParameter(param) {
   }
 }
 
-function getUrlParameter(param, hash=false) {
+function getUrlParameter(param) {
   let response = '';
   let params = new URLSearchParams(window.location.search);
   if (params) {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Container, Loader } from 'semantic-ui-react';
+import { Grid, Loader } from 'semantic-ui-react';
 import { Base } from '../Base/Base';
 import { Header } from '../Header/Header';
 import { SearchBar } from '../SearchBar/SearchBar';

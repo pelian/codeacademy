@@ -5,7 +5,7 @@ import './TrackList.css';
 export class TrackList extends Component {  
   render() {
     return (
-      <Item.Group className="tracklist" divided>
+      <Item.Group className='tracklist' divided>
         {
           this.props.tracks.map(track => {
             return (
